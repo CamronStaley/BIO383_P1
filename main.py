@@ -7,3 +7,4 @@ for seq_record in SeqIO.parse(input_file, "fasta"):
     print(seq_record.seq)
     print(len(seq_record))
 
+#hello
