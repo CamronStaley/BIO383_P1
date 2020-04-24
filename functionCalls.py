@@ -1,4 +1,5 @@
 import os
+import csv
 
 
 # reads in and parses all files in the directory
@@ -15,4 +16,13 @@ def parse_file(directory):
             if words[0] != '#':
                 words.insert(0, file)
                 to_return.append(words)
+    header = ["filename", "rsid", "chromosome", "position", "genotype"]
+    to_return.insert(0, header)
     return to_return
+
+
+# takes in a list of data and a name for the file and creates a cvs file containing that list
+def data_to_cvs(data, filename):
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
