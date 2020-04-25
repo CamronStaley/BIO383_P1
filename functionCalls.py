@@ -2,6 +2,15 @@ import os
 import csv
 from prettytable import PrettyTable
 
+rsids = {
+    'rs12913832': True,
+    'rs1393350': True,
+    'rs1800407': True,
+    'rs1805008': True,
+    'rs7495174': True,
+    'rs16891982': True
+}
+
 
 # reads in and parses all files in the directory
 # formats the data as a list containing filename, rsid, chromosome, position, genotype
@@ -14,7 +23,7 @@ def parse_file(directory):
         text = f.readlines()
         for line in text:
             words = line.split()
-            if words[0] != '#':
+            if words[0] != '#' and words[0] in rsids:
                 words.insert(0, file)
                 to_return.append(words)
     return to_return
