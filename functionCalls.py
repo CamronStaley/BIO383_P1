@@ -1,5 +1,6 @@
 import os
 import csv
+from prettytable import PrettyTable
 
 
 # reads in and parses all files in the directory
@@ -16,8 +17,6 @@ def parse_file(directory):
             if words[0] != '#':
                 words.insert(0, file)
                 to_return.append(words)
-    header = ["filename", "rsid", "chromosome", "position", "genotype"]
-    to_return.insert(0, header)
     return to_return
 
 
@@ -26,3 +25,12 @@ def data_to_cvs(data, filename):
     with open(filename, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
+
+
+# takes in a list of data and displays neatly
+def display_table(data):
+    table = PrettyTable()
+    table.field_names = ["filename", "rsid", "chromosome", "position", "genotype"]
+    for x in data:
+        table.add_row(x)
+    print(table)
