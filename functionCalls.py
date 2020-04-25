@@ -2,14 +2,7 @@ import os
 import csv
 from prettytable import PrettyTable
 
-rsids = {
-    'rs12913832': True,
-    'rs1393350': True,
-    'rs1800407': True,
-    'rs1805008': True,
-    'rs7495174': True,
-    'rs16891982': True
-}
+rsids = set(['rs12913832', 'rs1393350', 'rs1800407', 'rs1805008', 'rs7495174', 'rs16891982'])
 
 
 # reads in and parses all files in the directory
