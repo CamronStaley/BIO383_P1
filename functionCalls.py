@@ -2,7 +2,14 @@ import os
 import csv
 from prettytable import PrettyTable
 
+# the rsids we are looking for to compare and keep
 rsids = set(['rs12913832', 'rs1393350', 'rs1800407', 'rs1805008', 'rs7495174', 'rs16891982'])
+# const locations of information in the list
+FILE_LOC = 0  # filename location
+RSID_LOC = 1  # rsid location
+CHRO_LOC = 2  # chromosome location
+POS_LOC = 3   # position of the SNP location
+GENO_LOC = 4  # genotype location
 
 
 # reads in and parses all files in the directory
@@ -36,3 +43,28 @@ def display_table(data):
     for x in data:
         table.add_row(x)
     print(table)
+
+
+# takes the list of data and then counts all of the individual genotype pairs and returns them as a dictionary
+def count_genotypes(data):
+    to_return = {
+        'TT': 0,
+        'AA': 0,
+        'CC': 0,
+        'GG': 0,
+        'AT': 0,
+        'AC': 0,
+        'AG': 0,
+        'GT': 0,
+        'CT': 0,
+        'CG': 0
+    }
+    for genotype in data:
+        if genotype[GENO_LOC] in to_return:
+            to_return[genotype[GENO_LOC]] += 1
+    return to_return
+
+
+# compare two data sets (not sure how yet?)
+def compare_genotypes(data1, data2):
+    to_return = []
