@@ -8,5 +8,5 @@ functionCalls.display_table(bh_data)
 functionCalls.data_to_cvs(bh_data, 'bh_datafile.csv')
 
 genotype_dict = functionCalls.count_genotypes(bh_data)
-for items in genotype_dict.items():
+for items in genotype_dict.geno.items():
     print(items)
