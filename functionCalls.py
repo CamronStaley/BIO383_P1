@@ -16,7 +16,7 @@ def parse_file(directory):
         text = f.readlines()
         for line in text:
             words = line.split()
-            if words[0] != '#' and words[0] in rsids:
+            if words[0] in rsids:
                 words.insert(0, file)
                 to_return.append(words)
     return to_return
