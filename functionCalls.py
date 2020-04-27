@@ -2,6 +2,13 @@ import os
 import csv
 from prettytable import PrettyTable
 
+# const locations of information in the list
+FILE_LOC = 0  # filename location
+RSID_LOC = 1  # rsid location
+CHRO_LOC = 2  # chromosome location
+POS_LOC = 3  # position of the SNP location
+GENO_LOC = 4  # genotype location
+
 
 class Genotype:
     def __init__(self):
@@ -21,102 +28,95 @@ class Genotype:
         }
 
 
-# the rsids we are looking for to compare and keep
-rs12913832 = Genotype()
-rs1393350 = Genotype()
-rs1800407 = Genotype()
-rs1805008 = Genotype()
-rs7495174 = Genotype()
-rs16891982 = Genotype()
-rsids = {
-    'rs12913832': rs12913832,
-    'rs1393350': rs1393350,
-    'rs1800407': rs1800407,
-    'rs1805008': rs1805008,
-    'rs7495174': rs7495174,
-    'rs16891982': rs16891982
-}
+# holds all the actions we are going to be doing
+class FunctionCalls:
 
-# const locations of information in the list
-FILE_LOC = 0  # filename location
-RSID_LOC = 1  # rsid location
-CHRO_LOC = 2  # chromosome location
-POS_LOC = 3   # position of the SNP location
-GENO_LOC = 4  # genotype location
+    def __init__(self):
+        self.data = []
+        self.geno = Genotype()
+        self.rs12913832 = Genotype()
+        self.rs1393350 = Genotype()
+        self.rs1800407 = Genotype()
+        self.rs1805008 = Genotype()
+        self.rs7495174 = Genotype()
+        self.rs16891982 = Genotype()
+        self.rsids = {
+            'rs12913832': self.rs12913832,
+            'rs1393350': self.rs1393350,
+            'rs1800407': self.rs1800407,
+            'rs1805008': self.rs1805008,
+            'rs7495174': self.rs7495174,
+            'rs16891982': self.rs16891982
+        }
 
+    # reads in and parses all files in the directory
+    # formats the data as a list containing filename, rsid, chromosome, position, genotype
+    # then stores as a 2d list
+    def parse_file(self, directory):
+        for file in os.listdir(directory):
+            filename = directory + '/' + file
+            f = open(filename, "r")
+            text = f.readlines()
+            for line in text:
+                words = line.split()
+                if words[0] in self.rsids:
+                    words.insert(0, file)
+                    self.data.append(words)
 
-# reads in and parses all files in the directory
-# formats the data as a list containing filename, rsid, chromosome, position, genotype
-# then returns the list as a 2d list each row holding an element containing a different list
-def parse_file(directory):
-    to_return = []
-    for file in os.listdir(directory):
-        filename = directory + '/' + file
-        f = open(filename, "r")
-        text = f.readlines()
-        for line in text:
-            words = line.split()
-            if words[0] in rsids:
-                words.insert(0, file)
-                to_return.append(words)
-    return to_return
+    # displays data neatly
+    def display_table(self):
+        table = PrettyTable()
+        table.field_names = ["filename", "rsid", "chromosome", "position", "genotype"]
+        for x in self.data:
+            table.add_row(x)
+        print(table)
 
+    # takes the list of data and then counts all of the individual genotype pairs and stores it
+    def count_genotypes(self):
+        for genotype in self.data:
+            if genotype[GENO_LOC] in self.geno.geno:
+                self.geno.geno[genotype[GENO_LOC]] += 1
 
-# takes in a list of data and a name for the file and creates a cvs file containing that list
-def data_to_cvs(data, filename):
-    with open(filename, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(data)
+    # displays the count of the total number of each genotype
+    def display_total_genos(self):
+        for genotype in self.geno.geno.items():
+            print(genotype)
 
+    # counts and stores the count of each genotype in a each rsid and the highest occurrences
+    def count_geno_by_rsid(self):
+        for genotype in self.data:
+            rsid = genotype[RSID_LOC]
+            geno = genotype[GENO_LOC]
+            if geno in self.rsids[rsid].geno:
+                self.rsids[rsid].geno[geno] += 1
 
-# takes in a list of data and displays neatly
-def display_table(data):
-    table = PrettyTable()
-    table.field_names = ["filename", "rsid", "chromosome", "position", "genotype"]
-    for x in data:
-        table.add_row(x)
-    print(table)
+        for rsid in self.rsids:
+            max_count = 0
+            for key in self.rsids[rsid].geno:
+                if self.rsids[rsid].geno[key] > max_count:
+                    max_count = self.rsids[rsid].geno[key]
+                    self.rsids[rsid].average = max_count
 
+    # displays the occurrences of genotypes by each rsid
+    def display_geno_by_rsid(self):
+        for rsid in self.rsids:
+            print(rsid)
+            for item in self.rsids[rsid].geno.items():
+                print(item)
 
-# takes the list of data and then counts all of the individual genotype pairs and returns them as a dictionary
-def count_genotypes(data):
-    to_return = Genotype()
-    for genotype in data:
-        if genotype[GENO_LOC] in to_return.geno:
-            to_return.geno[genotype[GENO_LOC]] += 1
-    return to_return
+    # stores a string of the most common occurrences
+    def get_most_occur(self):
+        for rsid in self.rsids:
+            flag = True
+            for key in self.rsids[rsid].geno:
+                if self.rsids[rsid].geno[key] >= self.rsids[rsid].average:
+                    if not flag:
+                        self.rsids[rsid].most_occur += ' or ' + key
+                    else:
+                        self.rsids[rsid].most_occur += key
+                        flag = False
 
-
-# returns a dictionary containing the most frequent genotype for each rsid
-# TODO: Tiebreaker????
-def count_avg_genotypes(data):
-    for genotype in data:
-        rsid = genotype[RSID_LOC]
-        geno = genotype[GENO_LOC]
-        if rsid in rsids:
-            if geno in rsids[rsid].geno:
-                rsids[rsid].geno[geno] += 1
-    for rsid in rsids:
-        max_count = 0
-        for key in rsids[rsid].geno:
-            if rsids[rsid].geno[key] > max_count:
-                max_count = rsids[rsid].geno[key]
-                rsids[rsid].average = max_count
-    return rsids
-        
-
-# returns a string of the most common ocurances of each genotype
-def get_most_occur(data):
-    to_return = ''
-
-    for rsid in data:
-        flag = True
-        for key in data[rsid].geno:
-            if data[rsid].geno[key] >= data[rsid].average:
-                if not flag:
-                    data[rsid].most_occur += ' or ' + key
-                else:
-                    data[rsid].most_occur += key
-                    flag = False
-    return data
-
+    # prints the most common occurrences of genotypes in each rsids
+    def display_most_occur(self):
+        for rsid in self.rsids:
+            print(rsid + " " + self.rsids[rsid].most_occur)
