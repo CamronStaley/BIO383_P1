@@ -11,8 +11,10 @@ genotype_dict = functionCalls.count_genotypes(bh_data)
 for items in genotype_dict.geno.items():
     print(items)
 
+
 # prints the most frequent genotypes for each rsid
 rsids_dict = functionCalls.count_avg_genotypes(bh_data)
+rsids_dict = functionCalls.get_most_occur(rsids_dict)
 for x in rsids_dict:
     print(x)
-    print(rsids_dict.get(x).average)
+    print(rsids_dict.get(x).most_occur)

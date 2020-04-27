@@ -5,7 +5,8 @@ from prettytable import PrettyTable
 
 class Genotype:
     def __init__(self):
-        self.average = '??'
+        self.most_occur = ''
+        self.average = 0
         self.geno = {
             'TT': 0,
             'AA': 0,
@@ -100,11 +101,22 @@ def count_avg_genotypes(data):
         for key in rsids[rsid].geno:
             if rsids[rsid].geno[key] > max_count:
                 max_count = rsids[rsid].geno[key]
-                rsids[rsid].average = key
+                rsids[rsid].average = max_count
     return rsids
         
 
+# returns a string of the most common ocurances of each genotype
+def get_most_occur(data):
+    to_return = ''
 
-        
-
+    for rsid in data:
+        flag = True
+        for key in data[rsid].geno:
+            if data[rsid].geno[key] >= data[rsid].average:
+                if not flag:
+                    data[rsid].most_occur += ' or ' + key
+                else:
+                    data[rsid].most_occur += key
+                    flag = False
+    return data
 
