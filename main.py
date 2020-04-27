@@ -12,6 +12,7 @@ for items in genotype_dict.geno.items():
     print(items)
 
 # prints the most frequent genotypes for each rsid
-genotype_avg_dict = functionCalls.count_avg_genotypes(bh_data)
-for items in genotype_avg_dict.items():
-    print(items)
+rsids_dict = functionCalls.count_avg_genotypes(bh_data)
+for x in rsids_dict:
+    print(x)
+    print(rsids_dict.get(x).average)

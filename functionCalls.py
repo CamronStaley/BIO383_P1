@@ -4,18 +4,20 @@ from prettytable import PrettyTable
 
 
 class Genotype:
-    geno = {
-        'TT': 0,
-        'AA': 0,
-        'CC': 0,
-        'GG': 0,
-        'AT': 0,
-        'AC': 0,
-        'AG': 0,
-        'GT': 0,
-        'CT': 0,
-        'CG': 0
-    }
+    def __init__(self):
+        self.average = '??'
+        self.geno = {
+            'TT': 0,
+            'AA': 0,
+            'CC': 0,
+            'GG': 0,
+            'AT': 0,
+            'AC': 0,
+            'AG': 0,
+            'GT': 0,
+            'CT': 0,
+            'CG': 0
+        }
 
 
 # the rsids we are looking for to compare and keep
@@ -83,6 +85,7 @@ def count_genotypes(data):
             to_return.geno[genotype[GENO_LOC]] += 1
     return to_return
 
+
 # returns a dictionary containing the most frequent genotype for each rsid
 # TODO: Tiebreaker????
 def count_avg_genotypes(data):
@@ -92,22 +95,13 @@ def count_avg_genotypes(data):
         if rsid in rsids:
             if geno in rsids[rsid].geno:
                 rsids[rsid].geno[geno] += 1
-    genotype = {
-        'rs12913832': "",
-        'rs1393350': "",
-        'rs1800407': "",
-        'rs1805008': "",
-        'rs7495174': "",
-        'rs16891982': ""
-    }
     for rsid in rsids:
         max_count = 0
         for key in rsids[rsid].geno:
             if rsids[rsid].geno[key] > max_count:
                 max_count = rsids[rsid].geno[key]
-                genotype[rsid] = key
-    
-    return genotype
+                rsids[rsid].average = key
+    return rsids
         
 
 
