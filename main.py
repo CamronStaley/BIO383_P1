@@ -41,3 +41,5 @@ print()
 print("Red Hair")
 red_hair.display_most_occur()
 print()
+
+black_hair.compare_results("Black", red_hair, "Red")
