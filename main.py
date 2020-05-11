@@ -49,3 +49,8 @@ blonde_hair.display_most_occur()
 print()
 
 black_hair.compare_results("Black", red_hair, "Red")
+
+for rsid in black_hair.rsids:
+    print(rsid + ': ')
+    black_hair.compare_genos_by_rsid(rsid, 'Black', red_hair, 'Red')
+    print()

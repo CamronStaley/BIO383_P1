@@ -82,6 +82,15 @@ class FunctionCalls:
             table.add_row(temp)
         print(table)
 
+    # compares the genotypes of a given rsid and two hair colors
+    def compare_genos_by_rsid(self, rsid, self_color, other, other_color):
+        table = PrettyTable()
+        table.field_names = ["Genotype", self_color, other_color]
+        for genos in self.rsids[rsid].geno:
+            temp = [genos, self.rsids[rsid].geno[genos], other.rsids[rsid].geno[genos]]
+            table.add_row(temp)
+        print(table)
+
     # takes the list of data and then counts all of the individual genotype pairs and stores it
     def count_genotypes(self):
         for genotype in self.data:
@@ -131,3 +140,4 @@ class FunctionCalls:
     def display_most_occur(self):
         for rsid in self.rsids:
             print(rsid + " " + self.rsids[rsid].most_occur)
+
